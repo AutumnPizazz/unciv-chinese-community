@@ -47,7 +47,7 @@ Emperors and Deities（帝王和神明）既没有帝王，也没有神明，而
 
 或者Discord群组：
 
-![Discord](https://img.shields.io/discord/1415865496758259744?label=Discord&color=blue)
+[![Discord](https://img.shields.io/discord/1415865496758259744?label=Discord&color=blue)](https://discord.gg/EYG6hT3W7N)
 
 ### 总之请试玩该模组！因为没人玩既调不了平衡，也做不了QoL！！！
 
