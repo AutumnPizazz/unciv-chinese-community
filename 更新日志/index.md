@@ -4,16 +4,14 @@ title: 更新日志
 
 ## 更新日志
 
-选择您要查看的更新日志：
+::: info Unciv 原版更新日志
+[Unciv 官方](https://github.com/yairm210/Unciv) 上游近期版本更新内容的中文翻译。
 
-<div class="vp-doc">
+→ [查看 Unciv 原版更新日志](/更新日志/Unciv原版/)
+:::
 
-### <a href="/更新日志/Unciv原版/" style="text-decoration: none;">🌍 Unciv 原版更新日志</a>
-
-英文原版 [changelog](https://github.com/yairm210/Unciv/blob/master/changelog.md) 的中文翻译，追踪 Unciv 上游各版本更新内容。
-
-### <a href="/更新日志/UncivCN/" style="text-decoration: none;">🇨🇳 UncivCN 更新日志</a>
-
+::: tip UncivCN 更新日志
 UncivCN（基于 Unciv 自立门户的中国版）的独立版本更新记录。
 
-</div>
+→ [查看 UncivCN 更新日志](/更新日志/UncivCN/)
+:::

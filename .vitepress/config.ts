@@ -106,7 +106,8 @@ export default defineConfig({
               { text: 'Unique 参数详解', link: '/开发者专区/模组开发/Unique参数详解' },
               { text: 'Unique 能力列表', link: '/开发者专区/模组开发/Unique能力列表' },
               { text: '类型检查', link: '/开发者专区/模组开发/类型检查' },
-              { text: '自动更新指南', link: '/开发者专区/模组开发/自动更新指南' }
+              { text: '自动更新指南', link: '/开发者专区/模组开发/自动更新指南' },
+              { text: 'UncivCN MergeAction 教程', link: '/开发者专区/模组开发/UncivCN扩展JSON-MergeAction教程' }
             ]
           },
           {

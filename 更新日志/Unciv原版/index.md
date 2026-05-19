@@ -4,7 +4,7 @@ title: Unciv 原版更新日志
 
 ## Unciv 原版更新日志
 
-本文为 [Unciv 官方更新日志](https://github.com/yairm210/Unciv/blob/master/changelog.md) 的中文翻译。
+本文为 [Unciv 官方更新日志](https://github.com/yairm210/Unciv/blob/master/changelog.md) 的中文翻译。仅收录近期版本，完整历史请参见英文原文。
 
 ---
 
@@ -57,7 +57,7 @@ By Ambeco:
 ## 4.20.3
 
 - 从旧存档开始新游戏时，自定义地图将被保留
-- 被摧毁城市中的间谍正确"撤离"
+- 被摧毁城市中的间谍正确撤离
 - 观察者可以再次查看建筑列表
 
 By unciv-loof:
@@ -227,5 +227,5 @@ By unciv-loof:
 ---
 
 ::: tip 更多版本
-以上仅收录近期版本。完整历史版本请参见 [Unciv 官方更新日志](https://github.com/yairm210/Unciv/blob/master/changelog.md)。
+以上仅收录近期版本（4.19.10 起）。完整历史版本请参见 [Unciv 官方更新日志](https://github.com/yairm210/Unciv/blob/master/changelog.md)。
 :::
