@@ -26,6 +26,7 @@ export default defineConfig({
     nav: [
       { text: '首页', link: '/' },
       { text: '文档', link: '/原版专区/Unciv基础术语/' },
+      { text: '更新日志', link: '/更新日志/' },
     ],
 
     sidebar: [
@@ -44,6 +45,15 @@ export default defineConfig({
           { text: '自主左二前应该做什么', link: '/原版专区/自主左二前应该做什么/' },
           { text: 'Unciv鳇脯菌校：全局篇', link: '/原版专区/Unciv鳇脯菌校/' },
           { text: '联机教程', link: '/原版专区/联机教程/' }
+        ]
+      },
+      {
+        text: '更新日志',
+        collapsed: false,
+        items: [
+          { text: '总览', link: '/更新日志/' },
+          { text: 'Unciv 原版', link: '/更新日志/Unciv原版/' },
+          { text: 'UncivCN', link: '/更新日志/UncivCN/' }
         ]
       },
       {
