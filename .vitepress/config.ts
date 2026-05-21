@@ -53,7 +53,14 @@ export default defineConfig({
         items: [
           { text: '总览', link: '/更新日志/' },
           { text: 'Unciv 原版', link: '/更新日志/Unciv原版/' },
-          { text: 'UncivCN', link: '/更新日志/UncivCN/' }
+          {
+            text: 'UncivCN',
+            collapsed: false,
+            items: [
+              { text: '更新日志', link: '/更新日志/UncivCN/' },
+              { text: '轮询联机', link: '/更新日志/UncivCN/轮询联机' }
+            ]
+          }
         ]
       },
       {
