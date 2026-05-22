@@ -61,6 +61,7 @@ features:
 - [模组开发入门](/开发者专区/模组开发/模组) — 从零开始制作模组
 - [Uniques 系统](/开发者专区/模组开发/Unique能力列表) — 掌握核心机制
 - [UncivCN MergeAction 教程](/开发者专区/模组开发/UncivCN扩展JSON-MergeAction教程) — JSON 字段级合并指南
+- [Lua 脚本](/开发者专区/模组开发/Lua脚本) — 在模组中使用 Lua 编写复杂逻辑
 :::
 
 ## UncivCN
@@ -71,6 +72,7 @@ UncivCN 继承自 Unciv，针对中文玩家深度定制：
 - [更新日志](/更新日志/UncivCN/) — 版本更新记录
 - [轮询联机](/更新日志/UncivCN/轮询联机) — 全新联机机制，告别无尽等待
 - [MergeAction 教程](/开发者专区/模组开发/UncivCN扩展JSON-MergeAction教程) — 模组 JSON 扩展系统
+- [Lua 脚本支持](/开发者专区/模组开发/Lua脚本) — 模组 Lua 脚本开发指南
 :::
 
 ---
