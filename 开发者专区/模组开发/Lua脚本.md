@@ -82,8 +82,10 @@ Lua 函数接收一个 `ctx` 表，包含以下字段：
 | `ctx.unit` | table | 触发单位（可能为 nil） |
 | `ctx.tile` | table | 触发地块（可能为 nil） |
 | `ctx.game` | table | 全局游戏对象 |
+| `ctx.store` | table | 模组持久化存储，含 `get` / `set` 方法 |
 | `ctx.log(msg)` | function | 输出调试日志到 Unciv 日志 |
 | `ctx.count(expr)` | function | 运行时求值 Countable 表达式 |
+| `ctx.evaluateConditional(condition)` | function | 求值一个 conditional 条件句（如 `"when at war"`），返回 boolean |
 
 **调用约定**：API 函数使用 `.` 语法（不是 `:` 语法）：
 
@@ -211,6 +213,11 @@ city.isHolyCity()                  -- 是否为圣城
 city.addPopulation(1)              -- 增加人口
 city.addBuilding("Library")        -- 免费建造
 city.removeBuilding("Library")     -- 移除建筑
+
+-- 建造队列
+city.setProduction("Library")      -- 将当前建造项目设为指定项目
+city.addToQueue("Walls")           -- 追加到建造队列末尾
+city.clearQueue()                  -- 清空整个建造队列
 ```
 
 ### unit — 单位
@@ -248,6 +255,10 @@ unit.useMovement(1.5)              -- 消耗移动力
 unit.upgrade()                     -- 免费升级
 unit.destroy()                     -- 摧毁单位
 unit.teleportTo(x, y)              -- 传送
+
+-- 路径查找
+unit.canReach(x, y)                -- 能否到达目标坐标
+unit.findPathTo(x, y)              -- 返回路径坐标列表 {{x,y}, {x,y}, ...} 或 nil
 ```
 
 ### tile — 地块
@@ -321,6 +332,7 @@ game.getTile(x, y)                 -- 获取地块表
 game.getMapWidth(), game.getMapHeight()
 game.isWrapped()                   -- 地图是否环绕
 game.getTilesNear(x, y, radius)    -- 范围内地块
+game.findTiles(criteria)           -- 按条件搜索全图地块，见下方说明
 
 -- 规则集查询
 game.getRulesetBuildings()         -- 所有建筑名列表
@@ -338,9 +350,85 @@ game.revealEntireMap("Rome")       -- 对某文明揭示全地图
 game.revealTilesAround("Rome", x, y, radius)
 ```
 
-## 完整示例
+### game.findTiles — 地块搜索
 
-一个更有实际意义的例子：根据时代缩放奖励。
+`findTiles` 接受一个 Lua 表作为搜索条件，返回匹配的地块表列表。支持的条件键：
+
+| 条件键 | 类型 | 说明 |
+|--------|------|------|
+| `resource` | string | 资源名（如 `"Iron"`） |
+| `terrain` | string | 基础地形名（如 `"Grassland"`） |
+| `terrainFeature` | string | 地形特征名（如 `"Forest"`） |
+| `improvement` | string | 改良设施名（如 `"Farm"`） |
+| `owned` | boolean | 是否已被拥有 |
+| `owner` | string | 拥有者文明名 |
+| `isCoast` | boolean | 是否为海岸地块 |
+| `isLand` | boolean | 是否为陆地 |
+| `isWater` | boolean | 是否为水域 |
+| `isHill` | boolean | 是否为丘陵 |
+| `maxDistance` + `centerX` + `centerY` | number | 空间范围约束（三者必须同时提供） |
+
+```lua
+-- 全图所有铁矿
+local ironTiles = game.findTiles({ resource = "Iron" })
+
+-- 距离 (10,15) 5 格内、未归属的森林地块
+local nearbyForest = game.findTiles({
+    terrainFeature = "Forest",
+    owned = false,
+    maxDistance = 5,
+    centerX = 10,
+    centerY = 15
+})
+
+-- 所有沿海的已归属地块
+local ownedCoastal = game.findTiles({ isCoast = true, owned = true })
+```
+
+### ctx.store — 持久化存储
+
+`ctx.store` 提供了一个跨回合、跨存档的键值存储，数据按模组自动隔离。所有值以 String 形式存储，需要数字时用 `tonumber()` 转换。
+
+```lua
+-- 写入
+ctx.store.set("invasionCount", "5")
+ctx.store.set("lastWarTarget", "Greece")
+
+-- 读取（第二个参数为默认值）
+local count = tonumber(ctx.store.get("invasionCount", "0"))
+local target = ctx.store.get("lastWarTarget", "")
+
+-- 计数器模式
+local wars = tonumber(ctx.store.get("totalWars", "0")) + 1
+ctx.store.set("totalWars", tostring(wars))
+```
+
+存储数据保存在存档文件中，随游戏进度一起持久化。每个模组的存储空间独立，不会互相干扰。
+
+### ctx.evaluateConditional — 条件求值
+
+复用 Unciv 内置的 conditional 系统，判断一个条件句在当前上下文中是否成立。
+
+```lua
+-- 通用条件
+if ctx.evaluateConditional("when at war") then
+    -- 处于战争中
+end
+
+-- 配合城市上下文
+if ctx.evaluateConditional("in coastal cities") then
+    -- 城市在沿海
+end
+
+-- Countable 条件
+if ctx.evaluateConditional("when number of [Cities] is greater than [5]") then
+    -- 拥有超过 5 个城市
+end
+```
+
+支持的条件类型覆盖游戏内置的全部 conditional 格式（70+ 种），包括战争状态、科技/政策完成、资源数量比较、地形判断等。条件在调用 `triggerUnique` 时给定的文明/城市/单位上下文中求值。
+
+## 完整示例
 
 ```lua
 -- scripts/rewards.lua
@@ -392,4 +480,6 @@ end
 - **返回值**：函数应返回 `true`（成功）或 `false`（失败）。返回 `false` 时触发器认为无效，在 UI 中可能显示为禁用状态
 - **性能**：Lua 调用有跨语言开销，避免在高频触发的路径上使用（如每回合的大量单位遍历）。优先使用 JSON Unique 处理简单的数值修正
 - **沙箱**：Lua 环境是受限的，`os.*`、`io.*`、`coroutine.*`、`require`、`debug.*`、文件操作、元表操作等功能已被禁用
+- **持久化存储**：`ctx.store` 中的值以字符串形式存入存档文件。存储非字符串数据时，用 `tostring()` 写入、`tonumber()` 读取
+- **路径查找开销**：`unit.findPathTo()` 采用 A* 多回合寻路，在大型地图上可能有明显耗时，避免在高频循环中调用
 - **日志**：`ctx.log(msg)` 输出到 Unciv 的调试日志。配合开发者控制台使用以调试脚本
