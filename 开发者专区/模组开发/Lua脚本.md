@@ -65,7 +65,7 @@ end
 
 | 占位符 | 说明 | 示例 |
 |--------|------|------|
-| `[luaFunction]` | 函数引用，格式 `modName:functionName` 或 `functionName`（省略 mod 前缀时使用当前 mod） | `myMod:onWarDeclared` |
+| `[luaFunction]` | 函数引用，格式 `modName:functionName`。省略 mod 前缀时，系统搜索所有已加载模组中的同名函数（为可靠起见，推荐始终使用 `modName:` 前缀） | `myMod:onWarDeclared` |
 | `[parameter]` | 自由文本，支持嵌入 Countable 表达式，在运行时自动求值 | `[Gold] * 3 + [Culture]` |
 
 Countable 表达式在调用 Lua 之前被解析为字符串。例如当前金币为 500，`[Gold] + 50` 会被解析为 `"500 + 50"`。你可以在 Lua 中用 `tonumber(ctx.parameter)` 或自行解析。
@@ -190,6 +190,7 @@ civ.addRebelUnit("Barbarian Axeman") -- 生成叛军
 city.id, city.name                 -- ID 和名称
 city.isCapital, city.isCoastal     -- 身份
 city.isPuppet, city.isBeingRazed   -- 状态
+city.isConnectedToCapital          -- 是否连接到首都
 city.population, city.health       -- 人口和血量
 
 -- 查询
@@ -390,5 +391,5 @@ end
 - **函数名必须全局唯一**：同一模组内不要定义同名函数。跨模组调用使用 `modName:functionName` 格式
 - **返回值**：函数应返回 `true`（成功）或 `false`（失败）。返回 `false` 时触发器认为无效，在 UI 中可能显示为禁用状态
 - **性能**：Lua 调用有跨语言开销，避免在高频触发的路径上使用（如每回合的大量单位遍历）。优先使用 JSON Unique 处理简单的数值修正
-- **沙箱**：Lua 环境是受限的，`os.*`、`io.*`、`require`、文件操作等功能已被禁用
+- **沙箱**：Lua 环境是受限的，`os.*`、`io.*`、`coroutine.*`、`require`、`debug.*`、文件操作、元表操作等功能已被禁用
 - **日志**：`ctx.log(msg)` 输出到 Unciv 的调试日志。配合开发者控制台使用以调试脚本
