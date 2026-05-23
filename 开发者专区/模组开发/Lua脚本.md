@@ -57,6 +57,30 @@ function onPalaceBuilt(ctx)
 end
 ```
 
+> **⚠️ 最常见的错误：搞混参数来源**
+>
+> Lua 函数被调用时，引擎只传入**一个参数**——`ctx` 上下文表。无论你把第一个参数命名为什么，它永远都是 `ctx`。
+>
+> ```lua
+> -- ❌ 错误写法（容易踩坑）
+> function onTech(ctx, n)         -- n 永远是 nil！引擎只传了一个参数
+>     local civ = game.getCurrentPlayer()  -- game 是 nil！它不是全局变量
+>     civ.addGold(n)              -- n 是 nil，没有效果
+> end
+>
+> -- ✅ 正确写法
+> function onTech(ctx)
+>     local n = tonumber(ctx.parameter)   -- 参数从 ctx.parameter 取
+>     local civ = ctx.game.getCurrentPlayer()  -- game 是 ctx 的属性
+>     civ.addGold(n)
+> end
+> ```
+>
+> 记住三条规则：
+> 1. **函数第一个参数永远是 `ctx`**——引擎注入的上下文表
+> 2. **`game`、`civ`、`city` 不是全局变量**——全部挂在 `ctx` 下面
+> 3. **Unique 传入的参数从 `ctx.parameter` 取**——它是一个字符串，需要时用 `tonumber()` 转换
+
 ## Unique 语法
 
 ```
@@ -476,6 +500,7 @@ end
 
 ## 注意事项
 
+- **参数约定（极易出错）**：引擎只向 lua 函数传入一个参数 `ctx`。`ctx.parameter` 才是 unique 中 `[parameter]` 解析后的值，`ctx.game`/`ctx.civ` 是上下文对象的入口。不要把第一个形参当成业务参数、不要把 `game` 当成全局变量——这是实测中最常见的错误
 - **函数名必须全局唯一**：同一模组内不要定义同名函数。跨模组调用使用 `modName:functionName` 格式
 - **返回值**：函数应返回 `true`（成功）或 `false`（失败）。返回 `false` 时触发器认为无效，在 UI 中可能显示为禁用状态
 - **性能**：Lua 调用有跨语言开销，避免在高频触发的路径上使用（如每回合的大量单位遍历）。优先使用 JSON Unique 处理简单的数值修正
