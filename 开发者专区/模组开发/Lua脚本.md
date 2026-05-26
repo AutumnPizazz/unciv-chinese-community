@@ -94,6 +94,20 @@ end
 
 Countable 表达式在调用 Lua 之前被解析为字符串。例如当前金币为 500，`[Gold] + 50` 会被解析为 `"500 + 50"`。你可以在 Lua 中用 `tonumber(ctx.parameter)` 或自行解析。
 
+### 生命周期钩子
+
+`TriggerLuaFunction` 可以结合触发条件（TriggerCondition）实现按回合/阶段自动执行。将 unique 放在 `GlobalUniques.json` 中并加上触发条件即可：
+
+```json
+// GlobalUniques.json
+"uniques": [
+    "Trigger the function [myMod:onTurnStart] with [] <upon turn start>",
+    "Trigger the function [myMod:onTurnEnd] with [] <upon turn end>"
+]
+```
+
+支持的触发条件包括：`<upon turn start>`、`<upon turn end>`、`<upon discovering [techFilter] technology>`、`<upon conquering a city>`、`<upon founding a city>` 等。此外，`TriggerLuaFunction` 可以直接放在 `Building`、`Tech`、`Policy`、`Era`、`Event`/`EventChoice`、`Unit`、`Promotion` 等对象的 `uniques` 中，在这些对象的自然触发时机（建造完成、研究完成、政策采纳等）执行。
+
 ## ctx 上下文对象
 
 Lua 函数接收一个 `ctx` 表，包含以下字段：
@@ -131,10 +145,6 @@ civ:addGold(500)
 | `id` | string | 文明唯一 ID |
 | `name` | string | 文明名称 |
 | `isHuman`, `isAI`, `isAlive`, `isMajorCiv`, `isCityState`, `isBarbarian`, `isSpectator` | boolean | 身份标志 |
-| `gold` | number | 金币数量 |
-| `happiness` | number | 幸福度 |
-| `era` | string | 当前时代名称 |
-| `cityCount` | number | 城市数量 |
 
 **方法**：
 
@@ -207,6 +217,9 @@ civ.addUnit("Warrior")             -- 生成单位
 civ.addUnitAtCity("Warrior", "Rome") -- 在指定城市生成单位
 civ.addUnitAtTile("Warrior", 10, 5)  -- 在指定坐标生成单位
 civ.addRebelUnit("Barbarian Axeman") -- 生成叛军
+
+-- unique 查询
+civ.hasUnique("unique text")         -- 文明是否拥有此 unique（基于文明 nation 的 uniqueObjects）
 ```
 
 ### city — 城市
@@ -227,6 +240,7 @@ city.getBuiltBuildings()           -- 已建成建筑名列表
 city.getBuildingCount()            -- 建筑总数
 city.getWonderCount()              -- 奇观数
 city.getPosition()                 -- {x, y} 坐标表
+city.getCenterTile()               -- 城市中心 tile 对象
 city.getTiles()                    -- 拥有的地块坐标列表
 city.getCurrentConstruction()      -- 当前建设中项目名
 city.getConstructionQueue()        -- 建设队列
@@ -242,6 +256,9 @@ city.removeBuilding("Library")     -- 移除建筑
 city.setProduction("Library")      -- 将当前建造项目设为指定项目
 city.addToQueue("Walls")           -- 追加到建造队列末尾
 city.clearQueue()                  -- 清空整个建造队列
+
+-- unique 查询
+city.hasUnique("unique text")      -- 已建建筑中是否有此 unique
 ```
 
 ### unit — 单位
@@ -253,12 +270,29 @@ unit.isCivilian, unit.isMilitary, unit.isRanged
 unit.isEmbarked, unit.isFortified, unit.isAutomated
 unit.health
 
+-- base 子表（单位模板属性，只读）
+unit.base.name                     -- 单位名（如 "Warrior"）
+unit.base.strength                 -- 近战战斗力
+unit.base.rangedStrength           -- 远程战斗力（0 表示非远程）
+unit.base.cost                     -- 建造/购买花费
+unit.base.movement                 -- 基础移动力
+unit.base.range                    -- 基础射程
+unit.base.unitType                 -- 单位类型（如 "Melee"）
+unit.base.requiredResource         -- 所需资源（空字符串表示无）
+unit.base.requiredTech             -- 所需科技（空字符串表示无）
+unit.base.obsoleteTech             -- 废弃科技（空字符串表示无）
+unit.base.upgradesTo               -- 升级目标单位名
+unit.base.replaces                 -- 替代单位名
+unit.base.uniqueTo                 -- 专属文明名
+unit.base.promotions               -- 初始晋升名列表
+
 -- 查询
 unit.getRange()                    -- 射程
 unit.getMovement()                 -- 最大移动力
 unit.getCurrentMovement()          -- 剩余移动力
 unit.getXP()                       -- 经验值
 unit.hasPromotion("Shock I")       -- 是否有晋升
+unit.hasUnique("unique text")      -- 单位是否拥有此 unique（含 unit type + 晋升）
 unit.getPromotions()               -- 晋升名列表
 unit.getPromotionCount()           -- 晋升数量
 unit.hasStatus("Fortification")    -- 是否有状态
@@ -279,6 +313,8 @@ unit.useMovement(1.5)              -- 消耗移动力
 unit.upgrade()                     -- 免费升级
 unit.destroy()                     -- 摧毁单位
 unit.teleportTo(x, y)              -- 传送
+unit.attackTile(x, y)              -- 攻击目标坐标上的单位/城市
+                                   -- 返回 {attackerDamage=n, defenderDamage=m} 或 false（不可攻击）
 
 -- 路径查找
 unit.canReach(x, y)                -- 能否到达目标坐标
@@ -307,6 +343,7 @@ tile.hasImprovement()              -- 是否有改良设施
 tile.hasMilitaryUnit()             -- 是否有军事单位
 tile.hasCivilianUnit()             -- 是否有平民单位
 tile.getUnits()                    -- 地块上的单位表列表
+tile.getYield()                    -- 返回地块产出表 {Food=2, Production=1, Gold=0, ...}
 tile.isOwned()                     -- 是否被拥有
 tile.getOwner()                    -- 拥有者文明名
 tile.isOwnedBy("Rome")             -- 是否属于某文明
@@ -391,6 +428,7 @@ game.revealTilesAround("Rome", x, y, radius)
 | `isWater` | boolean | 是否为水域 |
 | `isHill` | boolean | 是否为丘陵 |
 | `maxDistance` + `centerX` + `centerY` | number | 空间范围约束（三者必须同时提供） |
+| `maxResults` | number | 结果数量上限（默认 500，不指定时自动截断） |
 
 ```lua
 -- 全图所有铁矿
@@ -458,7 +496,7 @@ end
 -- scripts/rewards.lua
 function eraScalingGold(ctx)
     local civ = ctx.civ
-    local era = civ.era
+    local era = civ.getEra()
 
     -- 时代到金币的映射
     local rewards = {
@@ -504,7 +542,7 @@ end
 - **函数名必须全局唯一**：同一模组内不要定义同名函数。跨模组调用使用 `modName:functionName` 格式
 - **返回值**：函数应返回 `true`（成功）或 `false`（失败）。返回 `false` 时触发器认为无效，在 UI 中可能显示为禁用状态
 - **性能**：Lua 调用有跨语言开销，避免在高频触发的路径上使用（如每回合的大量单位遍历）。优先使用 JSON Unique 处理简单的数值修正
-- **沙箱**：Lua 环境是受限的，`os.*`、`io.*`、`coroutine.*`、`require`、`debug.*`、文件操作、元表操作等功能已被禁用
+- **沙箱**：Lua 环境是受限的，`os.*`、`io.*`、`coroutine.*`、`require`、`debug.*`、`string.dump`、文件操作、元表操作等功能已被禁用
 - **持久化存储**：`ctx.store` 中的值以字符串形式存入存档文件。存储非字符串数据时，用 `tostring()` 写入、`tonumber()` 读取
 - **路径查找开销**：`unit.findPathTo()` 采用 A* 多回合寻路，在大型地图上可能有明显耗时，避免在高频循环中调用
 - **日志**：`ctx.log(msg)` 输出到 Unciv 的调试日志。配合开发者控制台使用以调试脚本
