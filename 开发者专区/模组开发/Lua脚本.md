@@ -219,7 +219,7 @@ civ.addUnitAtTile("Warrior", 10, 5)  -- 在指定坐标生成单位
 civ.addRebelUnit("Barbarian Axeman") -- 生成叛军
 
 -- unique 查询
-civ.hasUnique("unique text")         -- 文明是否拥有此 unique（基于文明 nation 的 uniqueObjects）
+civ.hasUnique("unique text")         -- 文明是否拥有此 unique（搜索范围：nation + 已研究科技 + 已采纳政策 + 当前时代）
 ```
 
 ### city — 城市
