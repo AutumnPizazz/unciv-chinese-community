@@ -14,15 +14,23 @@ UncivCN 继承自 Unciv，针对中文玩家进行深度定制与优化。
 
 ## v4.20.17.2<Badge type="tip" text="最新" />
 
-**发布日期**：2026.7.4
+**发布日期**：2026.7.12
 
-- 添加单位钉、地图钉功能。
-
+- 添加单位钉、地图钉功能
+  
     单位钉 ：在世界屏幕右下角小地图左侧新增开关，开启后可点击任意单位（含他国单位）为其添加备注。备注文字显示在单位兵棋正下方。再次点击已备注的单位可编辑或删除备注。同一地块有多个单位时会弹出选择列表。
-    
+  
     地图钉 ：在单位钉开关下方新增独立开关，开启后可点击任意地块（含无单位地块）添加备注。备注文字直接显示在地块上，优先级高于食物/产能/金币等产出图标。
-    
+  
     两个开关互相独立，备注数据保存在同一 {存档名}_notes 文件中。
+
+- 取消旋转对称地图对半径的奇偶限制
+
+- 禁用文明积分面板时同步禁用实验性统计面板
+
+- 实现游戏版本兼容性隔离（旧版无法加载新版存档）
+
+- 训练移民等食物->产能单位时避免市民饿死
 
 ---
 
@@ -103,9 +111,9 @@ UncivCN 继承自 Unciv，针对中文玩家进行深度定制与优化。
 
 - 新增模组特性：
 
-| 英文原文 | 中文释义 |
-|---------|----------|
-| `Hidden from city screen` | 不再显示在城市面板中 |
+| 英文原文                                       | 中文释义                  |
+| ------------------------------------------ | --------------------- |
+| `Hidden from city screen`                  | 不再显示在城市面板中            |
 | `Can be built [amount] times in each city` | 可以在单个城市中重复建造[amount]次 |
 
 ---
@@ -141,12 +149,12 @@ UncivCN 继承自 Unciv，针对中文玩家进行深度定制与优化。
 
 - 新增模组特性：
 
-| 英文原文 | 中文释义 |
-|---------|----------|
-| `Attacks also target [mapUnitFilter] units within [positiveAmount] tiles` | 攻击也会同时攻击 [positiveAmount] 格内满足 [mapUnitFilter] 的单位 |
+| 英文原文                                                                                                          | 中文释义                                                       |
+| ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `Attacks also target [mapUnitFilter] units within [positiveAmount] tiles`                                     | 攻击也会同时攻击 [positiveAmount] 格内满足 [mapUnitFilter] 的单位         |
 | `Attacks also target [mapUnitFilter] units within [positiveAmount] tiles, with damage decreasing by distance` | 攻击也会同时攻击 [positiveAmount] 格内满足 [mapUnitFilter] 的单位，伤害随距离递减 |
-| `Takes [relativeAmount]% damage from own area attacks` | 受到自身范围攻击时，仅承受 [relativeAmount]% 的伤害 |
-| `Takes [relativeAmount]% counter damage from each unit hit by its area attacks` | 其范围攻击每击中一个单位，自身就会承受该单位 [relativeAmount]% 的反击伤害 |
+| `Takes [relativeAmount]% damage from own area attacks`                                                        | 受到自身范围攻击时，仅承受 [relativeAmount]% 的伤害                        |
+| `Takes [relativeAmount]% counter damage from each unit hit by its area attacks`                               | 其范围攻击每击中一个单位，自身就会承受该单位 [relativeAmount]% 的反击伤害             |
 
 - 添加统计面板数据导出为 csv 表格的功能
 
