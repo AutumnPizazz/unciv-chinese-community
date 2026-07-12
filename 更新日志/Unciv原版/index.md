@@ -8,6 +8,121 @@ title: Unciv 原版更新日志
 
 ---
 
+## 4.21.0
+- 文明百科中显示领袖个性特征 — By SomeTroglodyte
+- 重制胜利界面 — By cy-elec
+- Modding：允许为「数值或以上」类 uniques 传入参数 0 — By SeventhM
+- 大量小修复 — By Angais（LLM 辅助）
+- 修复 `allICivilopediaText` 中 `EventChoice` 条目重复的问题 — By xplon
+
+## 4.20.19
+- 修复城市界面音频问题（待验证）
+- 同一风格被多个文明共享时，文明图标与风格背景不再冲突
+- 大量小修复 — By Angais（LLM 辅助）
+
+## 4.20.18
+- 条件性工人 uniques 在禁用后不再引发崩溃
+- 改良设施快捷键冲突时不再触发两次
+- 文明专属图像优先于风格图像
+- 修复 A\* 寻路中「无移动力的单位将已占据地块视为可通行」的 Bug
+- 南侧边缘的城市边界与城市按钮不再消失
+- CPU 性能优化
+- By unciv-loof：
+  - 地图编辑器中新增镜像类型选项
+  - 调整地图类型排列顺序
+
+## 4.20.17
+- CPU 性能优化
+- 修复：在地图编辑器中移除蛮族营地时避免崩溃
+- 调整 Boreal（北方针叶林）地图类型的湖泊与海岸线生成 — By unciv-loof
+- 控制台：允许设置战略资源储量 — By SomeTroglodyte
+
+## 4.20.16
+- By unciv-loof：
+  - 根据移动力上限限制 `AdditionalAttacks` 带来的战斗力加成
+  - 修复德国文明独特能力
+  - 修复边境军事威慑力计算
+- 使「蛮族营地」改良设施可被 Mod 自定义 — By SomeTroglodyte
+- By BobbyCobby：
+  - 更清晰的 Mod 更新图标
+- 修复切换规则集时地图预览崩溃 — By Angais
+
+## 4.20.15
+- 消耗库存资源的改良设施改为开始建造时即扣除资源（与建筑和单位一致）
+- 减少大地图的内存占用
+- 亲王（Prince）难度的 AI 不再享有单位造价减免（与玩家 1:1 平等）
+- 要求 `CreatesOneImprovement` 的目标地块必须归属于建造城市 — By superdusto
+- 资源总览标签页改进 — By SomeTroglodyte
+- Modding：修复 Personality uniques 的验证问题 — By mvanhorn
+
+## 4.20.14
+- 修复「下一回合按钮黑屏」问题
+- 右键菜单指示器不再常驻显示
+- 缩放时城市按钮正确居中于地块
+- 城市产出图标不再与人口图标重叠
+- By SomeTroglodyte：
+  - 手势触发时长可在「选项 → 高级」中自定义
+  - 修复 unique 构建器中「选择音乐曲目」触发项
+  - 修复城邦始终显示「友好」个性的问题
+- 防止自动化清理 `CreatesOneImprovement` 标记残留 — By superdusto
+
+## 4.20.13
+- 大幅降低大地图的内存占用
+- Modding：显示 JSON 文件错误的具体位置
+- By SomeTroglodyte：
+  - 右键菜单视觉指示器
+  - Modding：修复「空名称」问题
+  - 修复开疆扩土摧毁蛮族营地后遗留过期任务的问题
+  - 城市购买地块的右键菜单，支持一次购买多个地块
+- 避免镜头聚焦于隐藏奇观位置 — By xplon
+- 验证晋升时尊重替代前置条件 — By superdusto
+
+## 4.20.12
+- By xplon：
+  - 翻译间谍名称时隐藏图标
+  - 提示可翻译规则集名称冲突
+- By SomeTroglodyte：
+  - 改进右键菜单指示器大小
+  - 控制台新增 `civ add` 和 `civ remove` 命令
+- 高级游戏设置中新增缺失的换行 — By unciv-loof
+
+## 4.20.11
+- 修复伟人建造伟人改良设施时出现重复按钮的问题
+- 修复 Android 自定义文件目录
+- 允许 Mod 常量验证器中值为 0 — By unciv-loof
+- By SomeTroglodyte：
+  - 修复通知中统计符号的黑色描边
+  - 修复 `TriggerUponLosingUnit`（单位阵亡触发）
+  - 修复 Android 屏幕键盘显示/隐藏问题
+  - 轻微 CPU 性能优化
+- 为沼泽地块增加「植被」标签 — By EmperorPinguin
+
+## 4.20.10
+- By SomeTroglodyte：
+  - 免费政策通知点击后直接打开政策界面
+  - 新增「选择音乐曲目」可触发 unique
+  - 优化剧本启动，减少意外情况
+- Boreal（北方针叶林）地图类型 — By unciv-loof
+
+## 4.20.9
+- AI 在游戏后期不再停止建造城市
+- 间谍管理界面新增国家与首都指示器
+- 工人单位尽量分散作业 — By Ambeco
+- By SomeTroglodyte：
+  - 正确显示改良设施维护费的修正值
+  - 修复注释嵌套 typed uniques 的翻译生成
+- By unciv-loof：
+  - 阻止 AI 谴责已灭亡的文明
+  - 多人游戏元数据预览中不再显示（Unknown）文明名
+- 修复「受过教育的精英」政策不赠送伟人的问题 — By AutumnPizazz
+
+## 4.20.8
+- 程序化地图的无缝世界包裹生成 — By Romelium
+- By SomeTroglodyte：
+  - 改善小屏幕下的「战报表」
+  - CPU 性能优化
+- RAM 性能优化 — By Ambeco
+
 ## 4.20.7
 
 - 大幅地图的渲染性能优化
